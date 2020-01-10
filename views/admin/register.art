@@ -1,0 +1,64 @@
+	{{extend './common/layout.art'}}
+	{{block 'link'}}
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css"/>
+	{{/block}}
+
+	{{block 'main'}}
+    <div class="login-body">
+        <div class="login-container">
+            <h4 class="title">乐享技术 - 博客用户注册</h4>
+            <div class="login">
+                <form action="/admin/register" method="post" id='loginForm'>
+                    <div class="form-group">
+					<div class="input-group">
+					  <span class="input-group-addon" id="sizing-addon2">昵称</span>
+					 <input type="text" name='username' class="form-control" placeholder="请输入昵称">
+					</div>
+                    </div>
+					<div class="form-group">
+					<div class="input-group">
+					  <span class="input-group-addon" id="sizing-addon2">邮箱</span>
+					 <input type="email" name='email' class="form-control" placeholder="请输入邮件地址">
+					   <p class="tips">{{msg}}</p>
+					</div>
+					</div>
+                    <div class="form-group">
+					 <div class="input-group">
+					  <span class="input-group-addon" id="sizing-addon2">密码</span>
+			 <input type="password" name='password' class="form-control" placeholder="请输入密码">
+					  </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">注册</button>
+                </form>
+				<a class='uplogin' href='/admin/login' >返回登录</a>
+            </div>
+			
+            <div class="tips"></div>
+        </div>
+    </div>
+	
+	{{/block}}
+	{{block 'script'}}
+	<script src="https://cdn.jsdelivr.net/gh/stevenjoezhang/live2d-widget/autoload.js"></script>
+	<script type='text/javascript'>
+	   // 为表单添加提交事件
+	   $('#loginForm').on('submit',function(){
+		   let result = serializeToJson($(this))
+		     console.log(result)
+			 if(result.username.trim().length == 0){
+			 	alert('请输入昵称')
+			 	return false;
+			 }
+			if(result.email.trim().length == 0){
+				alert('请输入邮件地址')
+				return false;
+			}
+			if(result.password.trim().length == 0){
+				alert('请输入密码')
+				return false;
+			}
+			//阻止事件的默认提交事件
+			// return false;
+		})
+	</script>	
+	{{/block}}

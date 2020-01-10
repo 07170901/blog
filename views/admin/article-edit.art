@@ -1,0 +1,105 @@
+	{{extend './common/layout.art'}}
+	
+	{{block 'main'}}
+   <!-- 头部 -->
+   <!-- 由模板引擎来解析的，而不是浏览器，可用相对路径， -->
+   {{include './common/header.art'}}
+       <!-- /用户信息 -->
+   <!-- /头部 -->
+   <!-- 主体内容 -->
+    <!-- 主体内容 -->
+    <div class="content">
+       <!-- 侧边栏 -->
+       {{include './common/aside.art'}}
+       <!-- 侧边栏 -->
+        <div class="main">
+            <!-- 分类标题 -->
+            <div class="title">
+               <h4 style="display:{{article&&button=='修改'?'block':'none'}}">{{@article && article._id}}</h4>
+               <h4 style="display:{{button=='添加'?'block':'none'}}">{{button}}文章</h4>
+            </div>
+			<!-- 
+				enctype 指定表单数据的编码类型
+					application/x-www-form-urlencoded
+						输出格式：name=ddd&age=1
+					一般有文件上传用
+					multipart/form-data
+						将表单数据编码成二进制
+			 -->
+            <!-- /分类标题 -->
+            <form class="form-container" method='post' action='{{link}}' enctype='multipart/form-data'>
+                <div class="form-group">
+                    <label>标题</label>
+                    <input type="text" name='title' class="form-control" placeholder="请输入文章标题" value={{article&&article.title}}>
+                </div>
+                <div class="form-group">
+                    <label>作者</label>
+                    <input type="text" value='{{@userInfo.username}}'  name='author' class="form-control" readonly >
+                </div>
+                <div class="form-group">
+                    <label>发布时间</label>
+                    <input type="date"  name='publishDate' class="form-control"  value={{article&&article.publishDate?dateFormat(article.publishDate,'yyyy-mm-dd'):''}}>
+                </div>
+                
+                <div class="form-group">
+                   <label for="exampleInputFile">文章封面</label>
+				   <!-- 
+						multiple  允许用户一次性上传多个文件
+				   -->
+                   <input type="file" name='cover' id='file' >
+                   <div class="thumbnail-waper">
+                       <img class="img-thumbnail" name='cover'  src="{{article&&article.cover}} " id='preview'>
+                   </div>
+                </div>
+                <div class="form-group">
+                    <label>内容</label>
+                    <textarea class="form-control" name='content' id="editor"  >{{article&&article.content}}</textarea>
+                </div>
+                <div class="buttons">
+                    <input type="submit"  value={{button}} class="btn btn-primary">
+                </div>
+            </form>
+            
+        </div>
+    </div>
+
+	{{/block}}	
+	{{block 'script'}}
+    <script src="/admin/lib/ckeditor5/ckeditor.js"></script>
+    <script type="text/javascript">
+    
+        let editor;
+
+        ClassicEditor
+                .create( document.querySelector('#editor'))
+                .then(newEditor => {
+                    editor = newEditor;
+                })
+                .catch( error => {
+                    console.error( error );
+                });
+
+        // 获取数据
+        // const editorData = editor.getData();
+		
+		//选择文件上传控件
+		var file = document.querySelector('#file');
+		var preview = document.querySelector('#preview');
+		// 当用户选择完文件后
+		file.onchange = function(){
+			//1.创建文件读取对象
+			var reader = new FileReader();
+			//用户选择文件列表
+			console.log(reader)
+			//2.读取文件
+			reader.readAsDataURL(this.files[0])
+			//3.监听onloads
+			reader.onload = function(){
+				console.log(reader.result)
+				preview.src = reader.result
+			}
+		}
+		
+			
+    </script>
+	{{/block}}
